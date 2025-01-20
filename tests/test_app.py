@@ -9,21 +9,21 @@ def client():
     with app.test_client() as client:
         yield client
 
-@patch('app_package.app.get_db_connection')
+@patch('app_package.application.get_db_connection')
 def test_mock_debugging(mock_db_conn):
     mock_db_conn.return_value = MagicMock()
     from app_package.application import get_db_connection
     assert callable(get_db_connection)
     assert get_db_connection() is not None
 
-@patch('app_package.app.get_db_connection')
+@patch('app_package.application.get_db_connection')
 def test_health_endpoint(mock_db_conn, client):
     """Test the /health endpoint."""
     response = client.get('/health')
     assert response.status_code == 200
     assert response.data.decode('utf-8') == "Up & Running"
 
-@patch('app_package.app.get_db_connection')
+@patch('app_package.application.get_db_connection')
 def test_create_table_endpoint(mock_db_conn, client):
     """Test the /create_table endpoint."""
     mock_connection = MagicMock()
@@ -32,7 +32,7 @@ def test_create_table_endpoint(mock_db_conn, client):
     assert response.status_code == 200
     assert "Table created successfully" in response.data.decode('utf-8')
 
-@patch('app_package.app.get_db_connection')
+@patch('app_package.application.get_db_connection')
 def test_insert_record_endpoint(mock_db_conn, client):
     """Test the /insert_record endpoint."""
     mock_connection = MagicMock()
@@ -45,7 +45,7 @@ def test_insert_record_endpoint(mock_db_conn, client):
         "INSERT INTO example_table (name) VALUES (%s)", ('John Doe',)
     )
 
-@patch('app_package.app.get_db_connection')
+@patch('app_package.application.get_db_connection')
 def test_data_endpoint(mock_db_conn, client):
     """Test the /data endpoint."""
     mock_connection = MagicMock()

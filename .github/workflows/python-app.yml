@@ -20,4 +20,4 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.GIT_TOKEN }}" \
           -H "Content-Type: application/json" \
           --data '{"event_type":"trigger_full_pipeline"}' \
-          https://api.github.com/repos/Skyphoenixx/<central-repo>/dispatches
+          https://api.github.com/repos/Skyphoenixx/TerraformAWSFlask/dispatches

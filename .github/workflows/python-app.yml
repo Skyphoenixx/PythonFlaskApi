@@ -1,4 +1,4 @@
-name: Simple Terraform AWS Project
+name: Trigger Central Pipeline
 
 on:
   pull_request:
@@ -9,105 +9,15 @@ on:
       - main
 
 jobs:
-  terraform-destroy:
-    name: Destroy Terraform Resources
+  trigger-central:
+    name: Trigger Central Repository Workflow
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Terraform Repository
-        uses: actions/checkout@v3
-        with:
-          repository: Skyphoenixx/SimpleTerraformAWSProj
-          token: ${{ secrets.GIT_TOKEN }}
-          path: terraform-repo
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
-
-      - name: Terraform Init
-        run: terraform init
-        working-directory: terraform-repo/infra
-
-      - name: Terraform Destroy
-        run: terraform destroy --auto-approve
-        working-directory: terraform-repo/infra
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
-
-  terraform-apply:
-    name: Apply Terraform Resources
-    needs: terraform-destroy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Terraform Repository
-        uses: actions/checkout@v3
-        with:
-          repository: Skyphoenixx/SimpleTerraformAWSProj
-          token: ${{ secrets.GIT_TOKEN }}
-          path: terraform-repo
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
-
-      - name: Terraform Init
-        run: terraform init
-        working-directory: terraform-repo/infra
-
-      - name: Terraform Apply
-        run: terraform apply --auto-approve
-        working-directory: terraform-repo/infra
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
-
-  python-tests:
-    name: Run Python Tests
-    needs: terraform-apply
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Python Repository
-        uses: actions/checkout@v3
-        with:
-          repository: Skyphoenixx/PythonFlaskApi
-          token: ${{ secrets.GIT_TOKEN }}
-          path: python-repo
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-
-      - name: Install dependencies
+      - name: Trigger Central Pipeline
         run: |
-          python -m pip install --upgrade pip
-          pip install -r python-repo/requirements.txt
-          pip install pytest pytest-mock
-
-      - name: Run tests
-        env:
-          PYTHONPATH: ${{ github.workspace }}/python-repo
-        run: pytest python-repo
-
-  sonar-cloud-scan:
-    name: SonarCloud Analysis
-    needs: python-tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Python Repository
-        uses: actions/checkout@v3
-        with:
-          repository: Skyphoenixx/PythonFlaskApi
-          token: ${{ secrets.GIT_TOKEN }}
-          path: python-repo
-
-      - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.organization=skyphoenixx
-            -Dsonar.projectKey=Skyphoenixx_PythonFlaskApi
+          curl -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GIT_TOKEN }}" \
+          -H "Content-Type: application/json" \
+          --data '{"event_type":"trigger_full_pipeline"}' \
+          https://api.github.com/repos/Skyphoenixx/<central-repo>/dispatches

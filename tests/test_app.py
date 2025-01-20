@@ -1,6 +1,7 @@
+import importlib
 from unittest.mock import patch, MagicMock
 import pytest
-from app_package import app
+from app_package.application import app
 
 @pytest.fixture
 def client():
@@ -8,6 +9,12 @@ def client():
     with app.test_client() as client:
         yield client
 
+@patch('app_package.app.get_db_connection')
+def test_mock_debugging(mock_db_conn):
+    mock_db_conn.return_value = MagicMock()
+    from app_package.application import get_db_connection
+    assert callable(get_db_connection)
+    assert get_db_connection() is not None
 
 @patch('app_package.app.get_db_connection')
 def test_health_endpoint(mock_db_conn, client):

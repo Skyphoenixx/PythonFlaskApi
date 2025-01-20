@@ -1,7 +1,8 @@
+import os
 from flask import Flask, jsonify, render_template, request
 import pymysql
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), 'templates'))
 
 def get_db_connection():
     connection = pymysql.connect(host='mydb.cufvixp5y6t3.us-east-1.rds.amazonaws.com',  # RDS endpoint

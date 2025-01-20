@@ -7,23 +7,16 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
-    inputs:
-      action:
-        description: 'Specify action: full_pipeline or destroy'
-        required: true
-        default: 'full_pipeline'
 
 jobs:
   terraform-destroy:
     name: Destroy Terraform Resources
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.action == 'destroy' || github.event.inputs.action == 'full_pipeline' }}
     steps:
       - name: Checkout Terraform Repository
         uses: actions/checkout@v3
         with:
-          repository: your-username/terraform-repo
+          repository: Skyphoenixx/SimpleTerraformAWSProj
           token: ${{ secrets.GIT_TOKEN }}
           path: terraform-repo
 
@@ -46,12 +39,11 @@ jobs:
     name: Apply Terraform Resources
     needs: terraform-destroy
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.action == 'full_pipeline' }}
     steps:
       - name: Checkout Terraform Repository
         uses: actions/checkout@v3
         with:
-          repository: your-username/terraform-repo
+          repository: Skyphoenixx/SimpleTerraformAWSProj
           token: ${{ secrets.GIT_TOKEN }}
           path: terraform-repo
 
@@ -74,12 +66,11 @@ jobs:
     name: Run Python Tests
     needs: terraform-apply
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.action == 'full_pipeline' }}
     steps:
       - name: Checkout Python Repository
         uses: actions/checkout@v3
         with:
-          repository: your-username/python-repo
+          repository: Skyphoenixx/PythonFlaskApi
           token: ${{ secrets.GIT_TOKEN }}
           path: python-repo
 
@@ -103,12 +94,11 @@ jobs:
     name: SonarCloud Analysis
     needs: python-tests
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.action == 'full_pipeline' }}
     steps:
       - name: Checkout Python Repository
         uses: actions/checkout@v3
         with:
-          repository: your-username/python-repo
+          repository: Skyphoenixx/PythonFlaskApi
           token: ${{ secrets.GIT_TOKEN }}
           path: python-repo
 
@@ -121,4 +111,3 @@ jobs:
           args: >
             -Dsonar.organization=skyphoenixx
             -Dsonar.projectKey=Skyphoenixx_PythonFlaskApi
-

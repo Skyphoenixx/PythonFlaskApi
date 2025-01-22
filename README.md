@@ -24,7 +24,6 @@ A lightweight Python Flask API designed to provide a basic web application frame
 Before running or contributing to this project, ensure you have:
 - **Python** 3.9 or newer
 - **pip** (Python package manager)
-- Git installed on your local machine
 - An active MySQL database (e.g., provisioned by Terraform as part of the parent project).
 
 ## Installation

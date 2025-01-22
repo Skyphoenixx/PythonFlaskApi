@@ -5,20 +5,15 @@ import pymysql
 app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), 'templates'))
 
 # Fetch database host from environment variable
-DB_HOST = os.getenv('DB_HOST', 'localhost')  # Default to 'localhost' for local testing
+DB_HOST = os.getenv('DB_HOST', 'localhost').split(':')[0]  # Extract host without port
+DB_PORT = int(os.getenv('DB_HOST', 'localhost').split(':')[1]) if ':' in os.getenv('DB_HOST', 'localhost') else 3306
 DB_USER = os.getenv('DB_USER', 'dbuser')
 DB_PASSWORD = os.getenv('DB_PASSWORD', 'dbpassword')
 DB_NAME = os.getenv('DB_NAME', 'flaskdb')
 
-# Debugging: Print the fetched environment variables
-print(f"Database Host: {DB_HOST}")
-print(f"Database User: {DB_USER}")
-print(f"Database Password: {DB_PASSWORD}")
-print(f"Database Name: {DB_NAME}")
-
-
 def get_db_connection():
     connection = pymysql.connect(host=DB_HOST,
+                                 port=DB_PORT,
                                  user=DB_USER,
                                  password=DB_PASSWORD,
                                  db=DB_NAME,

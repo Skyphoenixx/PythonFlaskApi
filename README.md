@@ -44,22 +44,31 @@ Before running or contributing to this project, ensure you have:
    pip install -r requirements.txt
    ```
 
-4. Configure the database connection:
-   - Update `application.py` with your MySQL database connection details.
-
 ## Usage
 1. Set the `FLASK_APP` environment variable:
    - On Linux/MacOS:
      ```bash
      export FLASK_APP=application.py
+     export DB_HOST=<DB_HOST> # Set the MySQL database host
+     export DB_USER=<DB_USER> # Set the MySQL database user
+     export DB_PASSWORD=<DB_PASSWORD> # Set the MySQL database password
+     export DB_NAME=<DB_NAME> # Set the MySQL database name
      ```
    - On Windows (Command Prompt):
      ```bash
      set FLASK_APP=application.py
+     set DB_HOST=<DB_HOST> # Set the MySQL database host
+     set DB_USER=<DB_USER> # Set the MySQL database user
+     set DB_PASSWORD=<DB_PASSWORD> # Set the MySQL database password
+     set DB_NAME=<DB_NAME> # Set the MySQL database name
      ```
    - On Windows (PowerShell):
      ```bash
      $env:FLASK_APP="application.py"
+     $env:DB_HOST="<DB_HOST>" # Set the MySQL database host
+     $env:DB_USER="<DB_USER>" # Set the MySQL database user
+     $env:DB_PASSWORD="<DB_PASSWORD>" # Set the MySQL database password
+     $env:DB_NAME="<DB_NAME>" # Set the MySQL database name
      ```
 
 2. Start the Flask application:
@@ -67,7 +76,7 @@ Before running or contributing to this project, ensure you have:
    flask run
    ```
 
-3. The API will be available at `http://127.0.0.1:5000`.
+3. The API will be available at `http://127.0.0.1:5000` if hosted locally.
 
 4. Available Features:
    - **Create Table:** Use the web UI to create a new table in the MySQL database.

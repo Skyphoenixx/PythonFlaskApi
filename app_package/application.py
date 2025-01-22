@@ -4,11 +4,17 @@ import pymysql
 
 app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), 'templates'))
 
+# Fetch database host from environment variable
+DB_HOST = os.getenv('DB_HOST', 'localhost')  # Default to 'localhost' for local testing
+DB_USER = os.getenv('DB_USER', 'dbuser')
+DB_PASSWORD = os.getenv('DB_PASSWORD', 'dbpassword')
+DB_NAME = os.getenv('DB_NAME', 'flaskdb')
+
 def get_db_connection():
-    connection = pymysql.connect(host='mydb.cufvixp5y6t3.us-east-1.rds.amazonaws.com',  # RDS endpoint
-                                 user='dbuser',
-                                 password='dbpassword',  # Should be stored in a Secret Manager
-                                 db='flaskdb',
+    connection = pymysql.connect(host=DB_HOST,
+                                 user=DB_USER,
+                                 password=DB_PASSWORD,
+                                 db=DB_NAME,
                                  charset='utf8mb4',
                                  cursorclass=pymysql.cursors.DictCursor)
     return connection

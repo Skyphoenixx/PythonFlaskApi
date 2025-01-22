@@ -2,13 +2,6 @@ import os
 from flask import Flask, jsonify, render_template, request
 import pymysql
 
-# Explicitly load environment variables from /etc/environment
-with open('/etc/environment') as f:
-    for line in f:
-        if line.strip():
-            key, value = line.strip().split('=', 1)
-            os.environ[key] = value
-
 app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), 'templates'))
 
 # Fetch database host from environment variable
@@ -16,6 +9,13 @@ DB_HOST = os.getenv('DB_HOST', 'localhost')  # Default to 'localhost' for local 
 DB_USER = os.getenv('DB_USER', 'dbuser')
 DB_PASSWORD = os.getenv('DB_PASSWORD', 'dbpassword')
 DB_NAME = os.getenv('DB_NAME', 'flaskdb')
+
+# Debugging: Print the fetched environment variables
+print(f"Database Host: {DB_HOST}")
+print(f"Database User: {DB_USER}")
+print(f"Database Password: {DB_PASSWORD}")
+print(f"Database Name: {DB_NAME}")
+
 
 def get_db_connection():
     connection = pymysql.connect(host=DB_HOST,

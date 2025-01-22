@@ -2,6 +2,13 @@ import os
 from flask import Flask, jsonify, render_template, request
 import pymysql
 
+# Explicitly load environment variables from /etc/environment
+with open('/etc/environment') as f:
+    for line in f:
+        if line.strip():
+            key, value = line.strip().split('=', 1)
+            os.environ[key] = value
+
 app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), 'templates'))
 
 # Fetch database host from environment variable
